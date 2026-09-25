@@ -34,7 +34,12 @@ function CameraRig({ speaker }: { speaker: Speaker }) {
  useFrame((_, delta) => {
   const target = speaker === "teacher" ? new THREE.Vector3(0,3.1,8.8) : speaker === "maya" ? new THREE.Vector3(-3.6,2.4,6.5) : new THREE.Vector3(3.6,2.4,6.5);
   camera.position.lerp(target, 1-Math.exp(-1.5*Math.min(delta,.05)));
-  camera.lookAt(speaker === "teacher" ? 0,2.2,-2 : speaker === "maya" ? -2.7,1.3,-.5 : 2.7,1.3,-.5);
+  const lookAt = speaker === "teacher"
+   ? new THREE.Vector3(0, 2.2, -2)
+   : speaker === "maya"
+     ? new THREE.Vector3(-2.7, 1.3, -.5)
+     : new THREE.Vector3(2.7, 1.3, -.5);
+  camera.lookAt(lookAt);
  });
  return null;
 }
