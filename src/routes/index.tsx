@@ -25,6 +25,10 @@ export const Route = createFileRoute("/")({
 
 type Panel = "classroom" | "library" | "progress";
 type Material = { id:string; title:string; file_name:string; status:string; page_count:number|null; extracted_summary:string|null; storage_path:string };
+function required<T>(value: T | undefined, label: string): T {
+  if (value === undefined) throw new Error(`Missing ${label}`);
+  return value;
+}
 
 function App() {
   const [panel,setPanel]=useState<Panel>("classroom");
@@ -33,7 +37,9 @@ function App() {
   const [question,setQuestion]=useState(""); const [answer,setAnswer]=useState(""); const [asking,setAsking]=useState(false); const [materials,setMaterials]=useState<Material[]>([]);
   const [user,setUser]=useState<User|null>(null); const [uploading,setUploading]=useState(false); const [authOpen,setAuthOpen]=useState(false); const [sourceOpen,setSourceOpen]=useState(false);
   const inputRef=useRef<HTMLInputElement>(null);
-  const module=modules[moduleIndex]; const concept=module.concepts[conceptIndex]; const stage=concept.stages[stageIndex];
+  const module=required(modules[moduleIndex] ?? modules[0], "module");
+  const concept=required(module.concepts[conceptIndex] ?? module.concepts[0], "concept");
+  const stage=required(concept.stages[stageIndex] ?? concept.stages[0], "lesson stage");
 
   useEffect(()=>{ supabase.auth.getUser().then(({data})=>setUser(data.user)); const {data}=supabase.auth.onAuthStateChange((_e,s)=>setUser(s?.user??null)); return ()=>data.subscription.unsubscribe(); },[]);
   useEffect(()=>{ if(!user) return; supabase.from("learning_materials").select("id,title,file_name,status,page_count,extracted_summary,storage_path").order("created_at",{ascending:false}).then(({data})=>setMaterials(data??[])); },[user]);
