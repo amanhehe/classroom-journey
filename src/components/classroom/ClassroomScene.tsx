@@ -4,7 +4,7 @@ import { Suspense, useEffect, useRef } from "react";
 import * as THREE from "three";
 
 type Speaker = "teacher" | "maya" | "arjun";
-const C = { wall: "#d8d1bf", floor: "#805d3d", wood: "#9a6d43", dark: "#253039", board: "#183e35", chalk: "#f6f0dd", teacher: "#2f6f71", maya: "#d06a52", arjun: "#d7a83e", skin: "#b97a55", metal: "#66737a", window: "#b9dce3" };
+const C = { wall: "#d7e3e5", floor: "#78583f", wood: "#a8784f", dark: "#18313e", board: "#123f4b", chalk: "#f5f2e8", teacher: "#2d8a9e", maya: "#d46f56", arjun: "#d8ab48", skin: "#b97a55", metal: "#536874", window: "#a9d9df" };
 
 function Person({ position, color, speaking, teacher = false }: { position: [number, number, number]; color: string; speaking: boolean; teacher?: boolean }) {
   const group = useRef<THREE.Group>(null);
@@ -51,6 +51,11 @@ function Room({ speaker, board }: { speaker: Speaker; board: string }) {
   <Environment><Lightformer intensity={2} position={[0,7,0]} scale={[12,12,1]}/><Lightformer intensity={1} color={C.window} position={[-7,4,0]} rotation-y={Math.PI/2} scale={[7,4,1]}/></Environment>
   <mesh rotation-x={-Math.PI/2} receiveShadow><planeGeometry args={[18,20]}/><meshStandardMaterial color={C.floor} roughness={.95}/></mesh>
   <mesh position={[0,4,-5]} receiveShadow><boxGeometry args={[18,8,.2]}/><meshStandardMaterial color={C.wall}/></mesh>
+  <mesh position={[-6.1,3.9,-4.75]}><boxGeometry args={[2.35,3.7,.12]}/><meshStandardMaterial color={C.window} emissive={C.window} emissiveIntensity={.18}/></mesh>
+  <mesh position={[-6.1,3.9,-4.58]}><boxGeometry args={[.08,3.7,.05]}/><meshStandardMaterial color={C.dark}/></mesh>
+  <mesh position={[-6.1,3.9,-4.58]}><boxGeometry args={[2.35,.08,.05]}/><meshStandardMaterial color={C.dark}/></mesh>
+  <mesh position={[6.2,2.1,-4.68]}><boxGeometry args={[1.25,2.6,.16]}/><meshStandardMaterial color={C.wood}/></mesh>
+  <mesh position={[6.2,2.1,-4.52]}><boxGeometry args={[1.03,2.25,.04]}/><meshStandardMaterial color={C.dark}/></mesh>
   <RoundedBox args={[8,3.2,.18]} radius={.06} position={[0,3.6,-4.78]} castShadow><meshStandardMaterial color={C.board} roughness={.85}/></RoundedBox>
   <Text position={[0,3.7,-4.65]} fontSize={.34} maxWidth={6.8} textAlign="center" anchorX="center" anchorY="middle" color={C.chalk}>{board}</Text>
   <Person position={[0,0,-3.2]} color={C.teacher} speaking={speaker==="teacher"} teacher/>
@@ -59,6 +64,7 @@ function Room({ speaker, board }: { speaker: Speaker; board: string }) {
   <Desk position={[-2.7,0,3.1]}/><Person position={[-2.7,.88,3]} color={C.dark} speaking={false}/>
   <Desk position={[2.7,0,3.1]}/><Person position={[2.7,.88,3]} color={C.dark} speaking={false}/>
   <Desk position={[0,0,5.2]}/>
+  <group position={[-6.4,0,-2.7]}><mesh position={[0,.55,0]}><cylinderGeometry args={[.46,.34,1,16]}/><meshStandardMaterial color={C.dark}/></mesh><mesh position={[0,1.45,0]}><sphereGeometry args={[.65,16,12]}/><meshStandardMaterial color="#487963" roughness={.9}/></mesh></group>
  </>;
 }
 
