@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { BookOpen, Brain, ChevronLeft, ChevronRight, CircleHelp, ClipboardCheck, FileText, GraduationCap, Hand, Library, Mic, Pause, Play, Send, Settings, Sparkles, Sun, TrendingUp, Upload, UserRound, Volume2, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { BookOpen, Brain, ChevronLeft, ChevronRight, CircleHelp, ClipboardCheck, FileText, GraduationCap, Hand, Library, Mic, Pause, Play, Send, Settings, Sparkles, Sun, TrendingUp, Upload, Volume2, X } from "lucide-react";
 import { modules } from "@/lib/curriculum";
 import { ClassroomScene } from "@/components/classroom/ClassroomScene";
 import { Button } from "@/components/ui/button";

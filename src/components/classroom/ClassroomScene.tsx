@@ -1,10 +1,10 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Environment, Lightformer, RoundedBox, Text } from "@react-three/drei";
-import { Suspense, useEffect, useRef } from "react";
+import { Suspense, useRef } from "react";
 import * as THREE from "three";
 
 type Speaker = "teacher" | "maya" | "arjun";
-const C = { wall: "#d7e3e5", floor: "#78583f", wood: "#a8784f", dark: "#18313e", board: "#123f4b", chalk: "#f5f2e8", teacher: "#2d8a9e", maya: "#d46f56", arjun: "#d8ab48", skin: "#b97a55", metal: "#536874", window: "#a9d9df" };
+const C = { wall: "#d8d1bf", floor: "#805d3d", wood: "#a8784f", dark: "#253039", board: "#183e35", chalk: "#f5f2e8", teacher: "#2f6f71", maya: "#d06a52", arjun: "#d7a83e", skin: "#b97a55", metal: "#536874", window: "#a9d9df" };
 
 function Person({ position, color, speaking, teacher = false }: { position: [number, number, number]; color: string; speaking: boolean; teacher?: boolean }) {
   const group = useRef<THREE.Group>(null);
