@@ -24,8 +24,9 @@ export const Route = createFileRoute("/")({
   component: App,
 });
 
-type Panel = "classroom" | "library" | "progress";
+type Panel = "dashboard" | "classroom" | "library" | "progress";
 type Material = { id:string; title:string; file_name:string; status:string; page_count:number|null; extracted_summary:string|null; storage_path:string };
+type MasteryRow = { module_slug:string; concept_slug:string; mastery_score:number };
 function required<T>(value: T | undefined, label: string): T {
   if (value === undefined) throw new Error(`Missing ${label}`);
   return value;
