@@ -77,7 +77,121 @@ function App() {
     </aside>
 
     <div className="app-content">
-      <header className="topbar"><div><span className="header-icon"><Sun/></span><div><strong>{panel==="classroom"?"Classroom":panel==="library"?"Class Library":"Report Card"}</strong><small>{panel==="classroom"?`${module.code} · ${concept.title}`:"AI KYRO"}</small></div></div><div className="top-actions"><span className="encouragement"><Sparkles/> Keep going!</span><span className="points">1,240 points</span>{user?<Button variant="outline" onClick={()=>supabase.auth.signOut()}>Sign out</Button>:<Button variant="outline" onClick={()=>setAuthOpen(true)}>Sign in</Button>}</div></header>
+      <header className="topbar"><div><span className="header-icon"><Sun/></span><div><strong>{panel==="dashboard"?"My Desk":panel==="classroom"?"Classroom":panel==="library"?"Class Library":"Report Card"}</strong><small>{panel==="dashboard"?"Room 617 · Your learning space":panel==="classroom"?`${module.code} · ${concept.title}`:"AI KYRO"}</small></div></div><div className="top-actions"><span className="encouragement"><Sparkles/> Keep going!</span><span className="points">{points} points</span>{user?<Button variant="outline" onClick={()=>supabase.auth.signOut()}>Sign out</Button>:<Button variant="outline" onClick={()=>setAuthOpen(true)}>Sign in</Button>}</div></header>
+
+      {panel==="dashboard"&&<div className="kyro-dashboard">
+        <section className="dashboard-greeting">
+          <div>
+            <div className="eyebrow"><Sun size={14}/> GOOD {dayWord}{user?", STUDENT":""}</div>
+            <h2 className="kyro-title">Welcome back{firstName?`, ${firstName}`:""}.</h2>
+            <p className="kyro-subtitle">{conceptsStarted>0?`${conceptsRetained} of ${conceptsStarted} concept${conceptsStarted===1?"":"s"} retained so far.`:"A good day to learn something new."}</p>
+          </div>
+          <div className="desk-note"><Pencil size={15}/><span>Small steps build big ideas.</span></div>
+        </section>
+        <button ref={heroRef} onMouseMove={heroMove} onClick={()=>setPanel("classroom")} className="classroom-hero group">
+          <div className="hero-window-glow"/>
+          <div className="hero-sunbeam beam-one"/><div className="hero-sunbeam beam-two"/>
+          <div className="hero-window"><div className="window-sky"/><div className="window-cross horizontal"/><div className="window-cross vertical"/><div className="window-trees"/></div>
+          <div className="hero-clock"><span>10</span><i/><span>2</span><b/><span>4</span><em/><span>8</span></div>
+          <div className="hero-board">
+            <div className="board-pin pin-a"/><div className="board-pin pin-b"/>
+            <span className="board-kicker"><BookOpen size={13}/> TODAY'S LESSON</span>
+            <strong>Think → question → test</strong>
+            <div className="board-rule"/>
+            <p>No answer is accepted<br/>without a second thought.</p>
+            <span className="board-smile">☼</span>
+            <div className="chalk-lines"><i/><i/><i/></div>
+          </div>
+          <div className="hero-copy">
+            <div className="hero-mini"><span className="sun-doodle">☼</span> NEXT PERIOD</div>
+            <h1>Step into the<br/><span>classroom.</span></h1>
+            <p>Pick a concept and learn through a live teacher–student discussion. Predict, explain, challenge, and test your thinking.</p>
+            <span className="hero-cta">Enter class <ArrowRight size={16}/></span>
+            <span className="hero-meta"><Clock3 size={13}/> ~10 min · interactive</span>
+          </div>
+          <div className="hero-desk desk-books"><span/><span/><span/><i/></div>
+          <div className="hero-desk desk-pencil"><i/><b/><em/></div>
+          <div className="hero-plant"><Leaf size={35}/><span/><i/><b/></div>
+          <div className="hero-cursor-light"/>
+        </button>
+        <section className="stats-ribbon">
+          <div className="stat-pill"><span className="stat-icon gold"><Sparkles size={16}/></span><strong>{points}</strong><small>points</small></div>
+          <div className="stat-pill"><span className="stat-icon green"><Flame size={16}/></span><strong>{conceptsRetained}<small>/{conceptsStarted}</small></strong><small>retained</small></div>
+          <div className="stat-pill"><span className="stat-icon violet"><ClipboardCheck size={16}/></span><strong>{openDoubts}</strong><small>open doubt{openDoubts===1?"":"s"}</small></div>
+          <button className="stats-progress" onClick={()=>setPanel("progress")}><BarChart3 size={16}/> View learning progress <ArrowRight size={14}/></button>
+        </section>
+        <div className="dashboard-grid">
+          <main className="dashboard-main">
+            <section>
+              <div className="section-heading">
+                <div><span className="section-icon book"><BookOpen size={17}/></span><div><h3>Continue Learning</h3><p>Pick up where your thinking left off.</p></div></div>
+                <button onClick={()=>setPanel("classroom")}>View all <ArrowRight size={14}/></button>
+              </div>
+              <div className="module-grid">
+                {modules.map((mod,index)=>{
+                  const Icon=mod.slug.includes("thermo")?Beaker:Sigma;
+                  const explored=masteryRows.filter(r=>r.module_slug===mod.slug).length;
+                  return <article key={mod.slug} className="module-card group">
+                    <div className={index%2?"module-visual module-visual-gold":"module-visual module-visual-green"}>
+                      <span className="module-badge">{explored>0?"IN PROGRESS":"NEXT UP"}</span>
+                      <Icon className="module-main-icon" size={42} strokeWidth={1.35}/>
+                      <span className="module-scribble">{explored>0?"keep going →":"new idea"}</span>
+                      <span className="module-shape shape-one"/><span className="module-shape shape-two"/>
+                    </div>
+                    <div className="module-body">
+                      <div className="module-title-row"><h4>{mod.title}</h4><span className="module-arrow"><ArrowRight size={15}/></span></div>
+                      <p>{mod.concepts.length} concepts · build it step by step</p>
+                      <div className="module-progress"><span style={{width:`${Math.min(82,22+explored*12)}%`}}/></div>
+                      <span className="module-progress-label">{explored} / {mod.concepts.length} concepts explored</span>
+                      {mod.concepts.slice(0,2).map((c,ci)=>(
+                        <button key={c.slug} className="concept-row" onClick={()=>openConcept(index,ci)}>
+                          <span className="concept-dot"/><span className="concept-name">{c.title}</span>
+                          <span className="bloom-tag">{c.bloom}</span><ArrowRight size={13}/>
+                        </button>
+                      ))}
+                    </div>
+                  </article>;
+                })}
+              </div>
+            </section>
+            <section className="journey-card">
+              <div className="section-heading compact"><div><span className="section-icon journey"><Target size={17}/></span><div><h3>Your Learning Journey</h3><p>Progress, not perfection.</p></div></div></div>
+              <div className="journey-content">
+                <div className="progress-ring" style={{"--progress":`${retainedPct}%`} as CSSProperties}><div><strong>{retainedPct}%</strong><span>retained</span></div></div>
+                <div className="journey-copy"><strong>{conceptsRetained} concepts retained</strong><span>{conceptsStarted} concepts explored so far</span><em>“Curiosity first. Answers second.”</em></div>
+                <div className="journey-mini"><span><Flame size={15}/>Streak</span><strong>{conceptsRetained}</strong><small>concepts</small></div>
+                <div className="journey-mini"><span><Brain size={15}/>Thinking</span><strong>{openDoubts}</strong><small>open doubts</small></div>
+              </div>
+            </section>
+            <section>
+              <div className="section-heading compact"><div><span className="section-icon practice"><Zap size={17}/></span><div><h3>Quick Practice</h3><p>Short activities to keep your mind sharp.</p></div></div></div>
+              <div className="practice-grid">
+                <button onClick={()=>setPanel("classroom")} className="practice-card yellow"><span><Lightbulb size={19}/></span><div><strong>Concept Check</strong><small>Quick, focused questions</small></div><ArrowRight size={15}/></button>
+                <button onClick={()=>openConcept(0,0)} className="practice-card coral"><span><Target size={19}/></span><div><strong>Mixed Practice</strong><small>Variety of concepts</small></div><ArrowRight size={15}/></button>
+                <button onClick={()=>setPanel("progress")} className="practice-card blue"><span><ClipboardCheck size={19}/></span><div><strong>Past Progress</strong><small>See what needs review</small></div><ArrowRight size={15}/></button>
+              </div>
+            </section>
+          </main>
+          <aside className="dashboard-rail">
+            <div className="rail-card lesson-card">
+              <div className="rail-title"><span><Clock3 size={16}/> Today at a glance</span><span className="rail-live">LIVE</span></div>
+              <div className="rail-timeline">
+                <div className="timeline-item active"><span className="timeline-dot"/><div><small>NOW</small><strong>Interactive classroom</strong><p>Think → question → test</p></div></div>
+                <div className="timeline-item"><span className="timeline-dot"/><div><small>NEXT</small><strong>{materials.length?`${materials.length} source${materials.length>1?"s":""} ready`:"Keep exploring"}</strong><p>{materials.length?"Your material can ground the next class.":"Choose a concept from your desk."}</p></div></div>
+              </div>
+              <button onClick={()=>setPanel("library")} className="rail-link">Open class library <ArrowRight size={14}/></button>
+            </div>
+            <div className="rail-card activity-card">
+              <div className="rail-title"><span><CheckCircle2 size={16}/> Your desk</span></div>
+              <div className="desk-stat"><span className="desk-stat-icon yellow"><Sparkles size={15}/></span><div><strong>{points}</strong><small>learning points</small></div></div>
+              <div className="desk-stat"><span className="desk-stat-icon green"><Leaf size={15}/></span><div><strong>{conceptsRetained}</strong><small>concepts retained</small></div></div>
+              <div className="desk-stat"><span className="desk-stat-icon violet"><HelpCircle size={15}/></span><div><strong>{openDoubts}</strong><small>open doubts to revisit</small></div></div>
+            </div>
+            <div className="quote-note"><span className="pin"/><span className="quote-icon">✦</span><p>“The goal isn't to know everything. It's to notice what you don't know yet.”</p><small>— AI KYRO</small></div>
+          </aside>
+        </div>
+        <div className="kyro-footer"><span/> ET 617 · Metacognitive AI Scaffold <span/></div>
+      </div>}
 
       {panel==="classroom"&&<div className="classroom-page">
         <div className="classroom-toolbar"><div><span>NOW LEARNING</span><strong>{module.title}</strong><small>{concept.title} · {concept.bloom}</small></div><div className="module-tabs">{modules.map((m,i)=><Button size="sm" variant="ghost" key={m.slug} className={i===moduleIndex?"active":""} onClick={()=>{setModuleIndex(i);setConceptIndex(0);setStageIndex(0)}}>{m.code}</Button>)}</div><Button variant="outline" onClick={speak}><Volume2/> Read aloud</Button></div>
