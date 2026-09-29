@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { BookOpen, Brain, ChevronLeft, ChevronRight, CircleHelp, ClipboardCheck, FileText, GraduationCap, Hand, Library, Mic, Pause, Play, Send, Settings, Sparkles, Sun, TrendingUp, Upload, Volume2, X } from "lucide-react";
+import { ArrowRight, BarChart3, Beaker, BookOpen, Brain, CheckCircle2, ChevronLeft, ChevronRight, CircleHelp, ClipboardCheck, Clock3, FileText, Flame, GraduationCap, Hand, HelpCircle, Library, Lightbulb, Leaf, Mic, Pause, Pencil, Play, Send, Settings, Sigma, Sparkles, Sun, Target, TrendingUp, Upload, Volume2, X, Zap } from "lucide-react";
+import type { CSSProperties, MouseEvent as ReactMouseEvent } from "react";
 import { modules } from "@/lib/curriculum";
 import { ClassroomScene } from "@/components/classroom/ClassroomScene";
 import { Button } from "@/components/ui/button";
