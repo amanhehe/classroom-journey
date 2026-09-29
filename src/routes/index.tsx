@@ -58,6 +58,12 @@ function App() {
   const ask=async()=>{ if(!question.trim()||asking) return; setAsking(true); setAnswer(""); try { const r=await fetch("/api/chat",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({question,context:concept.stages.slice(0,stageIndex+1).map(s=>`${s.speaker}: ${s.text}`).join("\n"),source:sourceSummary})}); if(!r.ok){const e=await r.json(); throw new Error(e.message);} const reader=r.body?.getReader(); const decoder=new TextDecoder(); if(reader){while(true){const {done,value}=await reader.read(); if(done)break; setAnswer(a=>a+decoder.decode(value,{stream:true}));}} } catch(e){setAnswer(e instanceof Error?e.message:"The teacher could not answer right now.");} finally{setAsking(false);} };
   const upload=async(file:File)=>{ if(!user){setAuthOpen(true);return;} setUploading(true); const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,"-"); const path=`${user.id}/${crypto.randomUUID()}-${safe}`; const {error}=await supabase.storage.from("learning-materials").upload(path,file); if(!error){ const {data}=await supabase.from("learning_materials").insert({user_id:user.id,title:file.name.replace(/\.[^.]+$/,""),file_name:file.name,file_type:file.type||"application/octet-stream",storage_path:path,status:"ready",extracted_summary:`Uploaded course material: ${file.name}. Select it to ground your next classroom session.`}).select("id,title,file_name,status,page_count,extracted_summary,storage_path").single(); if(data)setMaterials(m=>[data,...m]); } setUploading(false); };
   const google=async()=>{await lovable.auth.signInWithOAuth("google",{redirect_uri:window.location.origin});};
+  const heroMove=(e:ReactMouseEvent<HTMLButtonElement>)=>{const el=heroRef.current;if(!el)return;const r=el.getBoundingClientRect();el.style.setProperty("--x",`${e.clientX-r.left}px`);el.style.setProperty("--y",`${e.clientY-r.top}px`);};
+  const openConcept=(mi:number,ci:number)=>{setModuleIndex(mi);setConceptIndex(ci);setStageIndex(0);setPanel("classroom");};
+  const conceptsStarted=masteryRows.length; const conceptsRetained=masteryRows.filter(r=>r.mastery_score>=100).length; const openDoubts=masteryRows.filter(r=>r.mastery_score<60).length;
+  const retainedPct=conceptsStarted?Math.round((conceptsRetained/conceptsStarted)*100):0;
+  const firstName=user?.email?.split("@")[0];
+  const hour=new Date().getHours(); const dayWord=hour<12?"MORNING":hour<17?"AFTERNOON":"EVENING";
 
   const visibleStages=concept.stages.slice(0,stageIndex+1);
 
