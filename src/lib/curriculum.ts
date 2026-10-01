@@ -12,7 +12,7 @@ export type LessonStage = {
 export type Concept = { slug: string; title: string; bloom: string; duration: number; mastery: number; stages: LessonStage[] };
 export type Module = { slug: string; code: string; title: string; description: string; concepts: Concept[] };
 
-const arc = (title: string, definition: string, misconception: string, example: string, equation: string, transfer: string): LessonStage[] => [
+export const arc = (title: string, definition: string, misconception: string, example: string, equation: string, transfer: string): LessonStage[] => [
   { kind: "question", speaker: "teacher", label: "Prior knowledge", text: `Before we begin ${title}, what do you already believe is true here?`, board: title, prompt: "Commit a first thought before the discussion moves on.", hint: "A rough idea is enough; we are measuring change, not perfection." },
   { kind: "explain", speaker: "teacher", label: "Core idea", text: definition, board: equation },
   { kind: "example", speaker: "maya", label: "Worked example", text: `Can we make that concrete? ${example}`, board: equation },

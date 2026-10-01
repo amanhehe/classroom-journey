@@ -352,3 +352,24 @@ button{font:inherit}.app-shell{min-height:100vh;background:var(--background);dis
 @media (max-width:1100px){.dashboard-grid{grid-template-columns:1fr}.dashboard-rail{display:grid;grid-template-columns:repeat(3,1fr)}.quote-note{height:100%}.hero-board{right:5%;width:46%}.hero-copy{width:48%}.hero-copy h1{font-size:37px}}
 @media (max-width:800px){.dashboard-rail{grid-template-columns:1fr}.classroom-hero{min-height:390px}.hero-board{top:34px;right:4%;width:47%;min-height:215px;padding:18px}.hero-board strong{font-size:19px}.hero-copy{left:25px;top:35px;width:49%}.hero-copy h1{font-size:32px}.hero-copy p{font-size:10px}.hero-window{width:52%}.hero-clock{display:none}.stats-ribbon{overflow:auto}.stat-pill{flex:0 0 auto}.stats-progress{display:none}.journey-content{grid-template-columns:76px 1fr 90px}.journey-mini:nth-last-child(1){display:none}.practice-grid{grid-template-columns:1fr}.module-grid{grid-template-columns:1fr 1fr}}
 @media (max-width:560px){.dashboard-greeting{align-items:flex-start}.desk-note{display:none}.classroom-hero{min-height:480px}.hero-window{width:100%;height:46%;top:0;bottom:auto}.hero-window::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(22,72,59,.68) 100%)}.classroom-hero::before{background:linear-gradient(180deg,rgba(21,67,55,.05) 0%,rgba(21,67,55,.82) 44%,rgba(21,67,55,.98) 100%)}.hero-board{right:8%;top:18px;width:52%;min-height:145px;padding:12px}.board-kicker{font-size:8px}.hero-board strong{font-size:14px;margin:8px 0}.hero-board p{font-size:8px;margin-top:8px}.hero-copy{left:22px;top:235px;width:82%}.hero-copy h1{font-size:34px;margin:9px 0}.hero-copy p{font-size:10px;max-width:320px}.hero-cta{margin-top:13px}.hero-meta{font-size:8px}.hero-plant{right:8%;bottom:17px}.desk-books{right:30%;bottom:-2px;transform:scale(.8)}.stats-ribbon{margin-bottom:20px}.module-grid{grid-template-columns:1fr}.dashboard-rail{display:flex}.journey-content{grid-template-columns:70px 1fr}.journey-mini{display:none}.kyro-title{font-size:30px}}
+
+/* AI module composer */
+.module-composer{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px;margin:18px 0;box-shadow:0 8px 24px color-mix(in oklch,var(--foreground) 6%,transparent)}
+.module-composer h2{display:flex;align-items:center;gap:8px;font-family:"Source Serif 4",Georgia,serif;font-size:1.25rem;margin:0}
+.module-composer>p{color:var(--muted-foreground);margin:4px 0 14px;font-size:.9rem}
+.composer-bar{display:flex;align-items:center;gap:6px;background:var(--sidebar);color:var(--sidebar-foreground);border-radius:999px;padding:6px 6px 6px 8px}
+.composer-input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:inherit;font-size:.95rem;padding:8px 4px}
+.composer-input::placeholder{color:color-mix(in oklch,var(--sidebar-foreground) 60%,transparent)}
+.composer-icon{display:grid;place-items:center;width:38px;height:38px;border-radius:999px;background:transparent;border:0;color:inherit;cursor:pointer}
+.composer-icon:hover{background:color-mix(in oklch,var(--sidebar-foreground) 12%,transparent)}
+.composer-icon svg,.composer-send svg{width:20px;height:20px}
+.listening{background:var(--destructive)!important;color:var(--destructive-foreground,white)!important;animation:pulse-mic 1.2s infinite}
+@keyframes pulse-mic{50%{opacity:.7}}
+.composer-send{display:grid;place-items:center;width:40px;height:40px;border-radius:999px;border:0;background:var(--accent);color:var(--accent-foreground);cursor:pointer}
+.composer-send:disabled{opacity:.45;cursor:not-allowed}
+.attach-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.attach-chips span{display:inline-flex;align-items:center;gap:6px;background:var(--muted);border-radius:999px;padding:4px 6px 4px 10px;font-size:.8rem}
+.attach-chips button{display:grid;place-items:center;border:0;background:transparent;cursor:pointer;color:inherit}
+.composer-note{display:block;margin-top:8px;color:var(--muted-foreground)}
+.composer-note.error{color:var(--destructive)}
+.custom-modules{display:grid;gap:12px;margin-top:16px}
