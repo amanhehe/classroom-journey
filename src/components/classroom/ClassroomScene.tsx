@@ -1,29 +1,31 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Environment, Lightformer, RoundedBox, Text } from "@react-three/drei";
-import { Suspense, useRef } from "react";
+import { Environment, Lightformer, RoundedBox, Text, useAnimations, useGLTF } from "@react-three/drei";
+import { Suspense, useEffect, useMemo, useRef } from "react";
+import { clone as cloneSkinned } from "three/examples/jsm/utils/SkeletonUtils.js";
 import * as THREE from "three";
 
 type Speaker = "teacher" | "maya" | "arjun";
 const C = { wall: "#d8d1bf", floor: "#805d3d", wood: "#a8784f", dark: "#253039", board: "#183e35", chalk: "#f5f2e8", teacher: "#2f6f71", maya: "#d06a52", arjun: "#d7a83e", skin: "#b97a55", metal: "#536874", window: "#a9d9df" };
 
-function Person({ position, color, speaking, teacher = false }: { position: [number, number, number]; color: string; speaking: boolean; teacher?: boolean }) {
+
+const A = "CharacterArmature|";
+function Avatar({ url, position, rotation = 0, scale = 1, speaking, faceTo }: { url: string; position: [number, number, number]; rotation?: number; scale?: number; speaking: boolean; faceTo?: [number, number] }) {
+  const { scene, animations } = useGLTF(url);
+  const model = useMemo(() => { const c = cloneSkinned(scene); c.traverse(o => { if ((o as THREE.Mesh).isMesh) { o.castShadow = true; o.receiveShadow = true; } }); return c; }, [scene]);
   const group = useRef<THREE.Group>(null);
-  const arm = useRef<THREE.Mesh>(null);
-  useFrame(({ clock }, rawDelta) => {
-    const dt = Math.min(rawDelta, .05);
-    if (!group.current) return;
-    const target = speaking ? 0.08 + Math.sin(clock.elapsedTime * 4) * .035 : 0;
-    group.current.position.y = THREE.MathUtils.damp(group.current.position.y, target, 8, dt);
-    if (arm.current) arm.current.rotation.z = THREE.MathUtils.damp(arm.current.rotation.z, speaking ? -.7 + Math.sin(clock.elapsedTime * 5) * .12 : -.15, 7, dt);
-  });
-  return <group ref={group} position={position}>
-    <mesh position={[0, teacher ? 1.72 : 1.35, 0]} castShadow><sphereGeometry args={[.28, 24, 18]} /><meshStandardMaterial color={C.skin} roughness={.8} /></mesh>
-    <mesh position={[0, teacher ? 1.05 : .72, 0]} castShadow><capsuleGeometry args={[.34, .82, 8, 16]} /><meshStandardMaterial color={color} roughness={.75} /></mesh>
-    <mesh ref={arm} position={[.4, teacher ? 1.2 : .8, 0]} rotation-z={-.15} castShadow><capsuleGeometry args={[.09, .7, 6, 10]} /><meshStandardMaterial color={color} /></mesh>
-    <mesh position={[-.4, teacher ? 1.18 : .78, 0]} rotation-z={.18} castShadow><capsuleGeometry args={[.09, .7, 6, 10]} /><meshStandardMaterial color={color} /></mesh>
-    {teacher && <><mesh position={[-.16,.35,0]} castShadow><capsuleGeometry args={[.11,.72,6,10]} /><meshStandardMaterial color={C.dark}/></mesh><mesh position={[.16,.35,0]} castShadow><capsuleGeometry args={[.11,.72,6,10]} /><meshStandardMaterial color={C.dark}/></mesh></>}
-  </group>;
+  const { actions } = useAnimations(animations, group);
+  useEffect(() => {
+    const idle = actions[A + "Idle_Neutral"] ?? actions[A + "Idle"];
+    if (!speaking) { idle?.reset().fadeIn(.4).play(); return () => { idle?.fadeOut(.4); }; }
+    const seq = [A + "Interact", A + "Idle", A + "Wave"]; let i = 0; let cur = actions[seq[0]!];
+    cur?.reset().fadeIn(.35).play();
+    const t = window.setInterval(() => { const next = actions[seq[++i % seq.length]!]; if (next && next !== cur) { cur?.fadeOut(.4); next.reset().fadeIn(.4).play(); cur = next; } }, 2600);
+    return () => { window.clearInterval(t); cur?.fadeOut(.4); };
+  }, [speaking, actions]);
+  const rotY = faceTo ? Math.atan2(faceTo[0] - position[0], faceTo[1] - position[2]) : rotation;
+  return <group ref={group} position={position} rotation-y={rotY} scale={scale}><primitive object={model} /></group>;
 }
+["/models/teacher.glb", "/models/maya.glb", "/models/arjun.glb"].forEach(u => useGLTF.preload(u));
 
 function Desk({ position, rotation = 0 }: { position: [number, number, number]; rotation?: number }) {
  return <group position={position} rotation-y={rotation}><RoundedBox args={[1.8,.16,.75]} radius={.05} position={[0,.85,0]} castShadow><meshStandardMaterial color={C.wood} roughness={.75}/></RoundedBox>{[-.72,.72].flatMap(x=>[-.25,.25].map((z,i)=><mesh key={`${x}-${i}`} position={[x,.4,z]} castShadow><boxGeometry args={[.1,.8,.1]}/><meshStandardMaterial color={C.metal}/></mesh>))}</group>
@@ -58,11 +60,11 @@ function Room({ speaker, board }: { speaker: Speaker; board: string }) {
   <mesh position={[6.2,2.1,-4.52]}><boxGeometry args={[1.03,2.25,.04]}/><meshStandardMaterial color={C.dark}/></mesh>
   <RoundedBox args={[8,3.2,.18]} radius={.06} position={[0,3.6,-4.78]} castShadow><meshStandardMaterial color={C.board} roughness={.85}/></RoundedBox>
   <Text position={[0,3.7,-4.65]} fontSize={.34} maxWidth={6.8} textAlign="center" anchorX="center" anchorY="middle" color={C.chalk}>{board}</Text>
-  <Person position={[0,0,-3.2]} color={C.teacher} speaking={speaker==="teacher"} teacher/>
-  <Desk position={[-2.8,0,-.2]} rotation={-.06}/><Person position={[-2.8,.88,-.3]} color={C.maya} speaking={speaker==="maya"}/>
-  <Desk position={[2.8,0,-.2]} rotation={.06}/><Person position={[2.8,.88,-.3]} color={C.arjun} speaking={speaker==="arjun"}/>
-  <Desk position={[-2.7,0,3.1]}/><Person position={[-2.7,.88,3]} color={C.dark} speaking={false}/>
-  <Desk position={[2.7,0,3.1]}/><Person position={[2.7,.88,3]} color={C.dark} speaking={false}/>
+  <Avatar url="/models/teacher.glb" position={[0,0,-3.2]} speaking={speaker==="teacher"} faceTo={[0,6]}/>
+  <Desk position={[-2.8,0,-.2]} rotation={-.06}/><Avatar url="/models/maya.glb" position={[-2.8,0,.55]} scale={.92} speaking={speaker==="maya"} faceTo={[0,-3.2]}/>
+  <Desk position={[2.8,0,-.2]} rotation={.06}/><Avatar url="/models/arjun.glb" position={[2.8,0,.55]} scale={.95} speaking={speaker==="arjun"} faceTo={[0,-3.2]}/>
+  <Desk position={[-2.7,0,3.1]}/><Avatar url="/models/arjun.glb" position={[-2.7,0,3.85]} scale={.9} speaking={false} faceTo={[0,-3.2]}/>
+  <Desk position={[2.7,0,3.1]}/><Avatar url="/models/maya.glb" position={[2.7,0,3.85]} scale={.9} speaking={false} faceTo={[0,-3.2]}/>
   <Desk position={[0,0,5.2]}/>
   <group position={[-6.4,0,-2.7]}><mesh position={[0,.55,0]}><cylinderGeometry args={[.46,.34,1,16]}/><meshStandardMaterial color={C.dark}/></mesh><mesh position={[0,1.45,0]}><sphereGeometry args={[.65,16,12]}/><meshStandardMaterial color="#487963" roughness={.9}/></mesh></group>
  </>;
