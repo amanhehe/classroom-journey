@@ -6,3 +6,4 @@
 - [x] Add learner material upload and AI-grounded study flow
 - [x] Validate desktop/mobile behavior and core learning flow
 - [x] Connect classroom chat to GPT through Lovable AI; document Claude option
+- [ ] Refine My Desk against the Classroom Reality Engine reference
