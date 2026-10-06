@@ -373,3 +373,5 @@ button{font:inherit}.app-shell{min-height:100vh;background:var(--background);dis
 .composer-note{display:block;margin-top:8px;color:var(--muted-foreground)}
 .composer-note.error{color:var(--destructive)}
 .custom-modules{display:grid;gap:12px;margin-top:16px}
+.unity-btn{font:inherit;font-size:12px;padding:6px 10px;border-radius:8px;border:1px solid hsl(0 0% 100%/.5);background:hsl(160 40% 15%/.85);color:hsl(45 40% 96%);cursor:pointer}
+.unity-status{font-size:12px;padding:6px 10px;border-radius:8px;background:hsl(45 40% 96%/.92);color:hsl(160 30% 15%)}
