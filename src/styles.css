@@ -375,3 +375,14 @@ button{font:inherit}.app-shell{min-height:100vh;background:var(--background);dis
 .custom-modules{display:grid;gap:12px;margin-top:16px}
 .unity-btn{font:inherit;font-size:12px;padding:6px 10px;border-radius:8px;border:1px solid hsl(0 0% 100%/.5);background:hsl(160 40% 15%/.85);color:hsl(45 40% 96%);cursor:pointer}
 .unity-status{font-size:12px;padding:6px 10px;border-radius:8px;background:hsl(45 40% 96%/.92);color:hsl(160 30% 15%)}
+
+/* Meeting feedback: per-persona threads, evaluated questions, unanswered follow-up */
+.thread-tabs{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid var(--border,#e5ddc8)}
+.thread-tabs button{font:inherit;font-size:12px;font-weight:600;padding:5px 12px;border-radius:999px;border:1px solid var(--border,#e5ddc8);background:transparent;color:inherit;cursor:pointer}
+.thread-tabs button.active{background:#183f32;color:#f7f2e7;border-color:#183f32}
+.transcript-list article.evaluated{border-left:3px solid #c8a74e;background:rgba(200,167,78,.08);border-radius:8px}
+.eval-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#8a6d1f;background:rgba(200,167,78,.18);padding:2px 7px;border-radius:999px;margin-left:6px}
+.thread-empty{padding:18px;font-size:13px;opacity:.7}
+.followup-card{margin:12px 14px;padding:12px 14px;border:1px dashed #c8a74e;border-radius:10px;background:rgba(200,167,78,.1)}
+.followup-card small{font-size:10px;font-weight:700;letter-spacing:.08em;color:#8a6d1f}
+.followup-card p{font-size:13px;margin:6px 0 10px}
