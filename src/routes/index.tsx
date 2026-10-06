@@ -59,7 +59,7 @@ function App() {
   useEffect(()=>{ supabase.auth.getUser().then(({data})=>setUser(data.user)); const {data}=supabase.auth.onAuthStateChange((_e,s)=>setUser(s?.user??null)); return ()=>data.subscription.unsubscribe(); },[]);
   useEffect(()=>{ if(!user){setPoints(0);setMasteryRows([]);return;} supabase.from("profiles").select("points").eq("id",user.id).single().then(({data})=>setPoints(data?.points??0)); supabase.from("concept_mastery").select("module_slug,concept_slug,mastery_score").eq("user_id",user.id).then(({data})=>setMasteryRows(data??[])); },[user]);
   useEffect(()=>{ if(!user) return; supabase.from("learning_materials").select("id,title,file_name,status,page_count,extracted_summary,storage_path").order("created_at",{ascending:false}).then(({data})=>setMaterials(data??[])); },[user]);
-  useEffect(()=>{ if(!playing) return; const t=window.setTimeout(()=>setStageIndex(i=>i<concept.stages.length-1?i+1:i), Math.max(3500,9000/speed)); return ()=>window.clearTimeout(t); },[playing,stageIndex,speed,concept.stages.length]);
+  useEffect(()=>{ if(!playing) return; const t=window.setTimeout(()=>goStage(Math.min(concept.stages.length-1,stageIndex+1)), Math.max(3500,9000/speed)); return ()=>window.clearTimeout(t); },[playing,stageIndex,speed,concept.stages.length]);
   useEffect(()=>{ setAttempted(false); setResponse(""); setAnswer(""); },[stageIndex,conceptIndex,moduleIndex]);
 
   const stageProgress=Math.round(((stageIndex+1)/concept.stages.length)*100);
