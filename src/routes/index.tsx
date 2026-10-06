@@ -78,6 +78,11 @@ function App() {
   const hour=new Date().getHours(); const dayWord=hour<12?"MORNING":hour<17?"AFTERNOON":"EVENING";
 
   const visibleStages=concept.stages.slice(0,stageIndex+1);
+  const [threadFilter,setThreadFilter]=useState<"all"|"teacher"|"maya"|"arjun">("all");
+  const [skipped,setSkipped]=useState<number[]>([]);
+  const filteredStages=threadFilter==="all"?visibleStages:visibleStages.filter(s=>s.speaker===threadFilter);
+  const goStage=(i:number)=>{ const cur=concept.stages[stageIndex]; if(i>stageIndex&&cur?.prompt&&!attempted&&!skipped.includes(stageIndex)) setSkipped(s=>[...s,stageIndex]); setStageIndex(i); };
+  const skippedHere=skipped.filter(i=>concept.stages[i]?.prompt);
 
   return <main className="app-shell">
     <aside className="main-sidebar">
