@@ -7,3 +7,4 @@
 - [x] Validate desktop/mobile behavior and core learning flow
 - [x] Connect classroom chat to GPT through Lovable AI; document Claude option
 - [x] Restore the fuller original My Desk interface after comparison
+- [x] Let learners load their own Unity WebGL scenes into the classroom
