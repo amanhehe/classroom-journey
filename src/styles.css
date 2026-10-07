@@ -386,3 +386,11 @@ button{font:inherit}.app-shell{min-height:100vh;background:var(--background);dis
 .followup-card{margin:12px 14px;padding:12px 14px;border:1px dashed #c8a74e;border-radius:10px;background:rgba(200,167,78,.1)}
 .followup-card small{font-size:10px;font-weight:700;letter-spacing:.08em;color:#8a6d1f}
 .followup-card p{font-size:13px;margin:6px 0 10px}
+
+/* Evaluated question popout */
+.question-popout{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;background:rgba(24,38,34,.45);backdrop-filter:blur(3px);padding:20px}
+.question-popout-card{background:#f7f2e7;border:1px solid #e5ddc8;border-top:4px solid #c8a74e;border-radius:16px;max-width:520px;width:100%;padding:24px;box-shadow:0 24px 60px rgba(24,38,34,.35)}
+.popout-kicker{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.08em;color:#8a6d1f;margin-bottom:10px}
+.question-popout-card h3{font-size:20px;margin:0 0 4px}
+.popout-sub{font-size:13px;opacity:.7;margin:0 0 14px}
+.popout-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
